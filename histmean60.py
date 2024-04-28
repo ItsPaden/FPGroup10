@@ -6,6 +6,9 @@ import random
 from PIL import Image, ImageChops
 import math
 
+# Compares 2 fingerprint image files
+# imageA, imageB: filepath to fingerprint images
+# Returns similarity expressed as a percentage
 def compare_prints(imageA, imageB):
     imA = Image.open(imageA)
     imB = Image.open(imageB)
@@ -14,7 +17,9 @@ def compare_prints(imageA, imageB):
     difference = val/100
     return(1-difference)
 
-
+# Loads image files from directory to associated f/s lists
+# dir: directory (relative or absolute path works) for image files
+# Returns 2 lists for the f and s images
 def load(dir):
     print("Loading fingerprints for authentication...")
     f_img = []
@@ -30,7 +35,9 @@ def load(dir):
     print((len(f_img) + len(s_img)), " files loaded")
     return f_img, s_img
 
-
+# Compares either a matching f/s pair or a non-matching f/s pair and records false/true positives and false/true negatives
+# dir: directory (relative or absolute path works) for image files, f_arr: list of f image files, s_arr: list of s image files
+# Returns false reject rate (FRR), false accept rate (FAR), and equal error rate (EER)
 def compare_sets(dir, f_arr, s_arr):
     # Compare fingerprints vars
     total_fingerprints = len(f_arr)
@@ -45,7 +52,7 @@ def compare_sets(dir, f_arr, s_arr):
     # high value = high strictness
     # 0.50 for low tolerance
     # 0.40 for high tolerance without excessive error rate
-    accept_threshold = 0.2
+    accept_threshold = 0.40
 
     # compare each index of fingerprints to subject fingerprint to determine authentication:
     for i in range(total_fingerprints):
@@ -94,7 +101,7 @@ def compare_sets(dir, f_arr, s_arr):
 
 if __name__ == '__main__':
     # Change dir to the directory containing the 4000 fingerprint images
-    dir = 'Finger'
+    dir = "FingerprintData"
     f_images, s_images = load(dir)
     FRR, FAR, EER = compare_sets(dir, f_images, s_images)
     print("--------------------")
